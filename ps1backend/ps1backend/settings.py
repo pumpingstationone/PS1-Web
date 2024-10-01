@@ -46,9 +46,9 @@ INSTALLED_APPS = [
     "crispy_bootstrap5",  # https://github.com/django-crispy-forms/crispy-bootstrap5?tab=readme-ov-file
 
     # scheduler
-    # 'django_celery_beat',
-    # 'django_celery_results',
-    # 'celery_progress'
+    'django_celery_beat',
+    'django_celery_results',
+    'celery_progress'
 
 
 
@@ -147,7 +147,7 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 # Custom User Model
-# AUTH_USER_MODEL = 'app.PSOneUser'
+AUTH_USER_MODEL = 'app.PSOneUser'
 
 # Handling SSL
 SECURE_SSL_REDIRECT = not DEBUG
@@ -164,11 +164,11 @@ CELERY_BACKEND = os.getenv("CELERY_BACKEND", "redis://redis:6379/0")
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 
-from celery.schedules import crontab
+# from celery.schedules import crontab
 
-CELERY_BEAT_SCHEDULE = {
-    "test_task": {
-        "task": "app.tasks.go_to_sleep",
-        "schedule": crontab(minute="*/1"),
-    },
-}
+# CELERY_BEAT_SCHEDULE = {
+#     "test_task": {
+#         "task": ".tasks.sample_task",
+#         "schedule": crontab(minute="*/1"),
+#     },
+# }

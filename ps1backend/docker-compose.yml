@@ -13,10 +13,10 @@ services:
     ports:
     - "5432:5432"
 # host.docker.internal:3000
-#  redis:
-#    image: redis:7-alpine
-#    ports:
-#      - "6379:6379"
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
 
   web: &web
     build:
@@ -35,23 +35,23 @@ services:
 #    env_file:
 #      - .env
     depends_on:
-#      - redis
+      - redis
       - db
-#  celery:
-#    <<: *web
-#    command: celery -A Wishlist worker --beat -l INFO
-#    ports:
-#      - "6969:6969"
-#    depends_on:
-#      - redis
-#      - web
-#
-#  beat:
-#    <<: *web
-#    command: celery -A Wishlist beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
-#    ports:
-#      - "4200:4200"
-#    depends_on:
-#      - redis
-#      - web
-#      - celery
+  celery:
+    <<: *web
+    command: celery -A ps1backend worker --beat -l INFO
+    ports:
+      - "6969:6969"
+    depends_on:
+      - redis
+      - web
+
+  beat:
+    <<: *web
+    command: celery -A ps1backend beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    ports:
+      - "4200:4200"
+    depends_on:
+      - redis
+      - web
+      - celery

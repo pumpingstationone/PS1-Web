@@ -3,5 +3,5 @@ from django.db import models
 
 
 # Create your models here.
-# class PSOneUser(AbstractUser):
-#     pass
+class PSOneUser(AbstractUser):
+    pass
