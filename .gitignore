@@ -4,3 +4,5 @@
 /**/__pycache__/
 
 ps1backend/postgres-data/
+
+ps1backend/celerybeat-schedule
