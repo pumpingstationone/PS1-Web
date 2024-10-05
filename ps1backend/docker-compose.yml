@@ -1,0 +1,57 @@
+version: "3.3"
+
+services:
+  db:
+    image: postgres:17.0
+    environment:
+      POSTGRES_DB: psone
+      POSTGRES_USER: psone
+      POSTGRES_PASSWORD: psone
+    restart: unless-stopped
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    ports:
+    - "5432:5432"
+# host.docker.internal:3000
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  web: &web
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+      - $HOME/.docker_bash_history:/root/.bash_history
+    ports:
+      - "8000:8000"
+    environment:
+      DB_NAME: psone
+      DB_USER: psone
+      DB_PASS: psone
+#    env_file:
+#      - .env
+    depends_on:
+      - redis
+      - db
+  celery:
+    <<: *web
+    command: celery -A ps1backend worker --beat -l INFO
+    ports:
+      - "6969:6969"
+    depends_on:
+      - redis
+      - web
+
+  beat:
+    <<: *web
+    command: celery -A ps1backend beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    ports:
+      - "4200:4200"
+    depends_on:
+      - redis
+      - web
+      - celery
